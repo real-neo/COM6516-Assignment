@@ -113,7 +113,7 @@ public class MarketGUI extends JFrame {
 
 			yearList.addActionListener(this);
 			monthList.addActionListener(this);
-			dayList.addActionListener(this);
+//			dayList.addActionListener(this);
 
 			JLabel promptLabel = new JLabel(prompt);
 			promptLabel.setFont(MAIN_FONT);
@@ -165,10 +165,13 @@ public class MarketGUI extends JFrame {
 
 		private void setDayList() {
 			YearMonth yearMonth = YearMonth.of(selectYear, selectMonth);
+			dayList.removeActionListener(this);
+			dayList.removeAllItems();
 			int daysInMonth = yearMonth.lengthOfMonth();
 			for (int i = 1; i <= daysInMonth; i++)
 				dayList.addItem(i);
 			dayList.setSelectedIndex(0);
+			dayList.addActionListener(this);
 		}
 
 		String getDate() {
