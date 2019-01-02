@@ -175,7 +175,7 @@ public class MarketGUI extends JFrame {
 		}
 
 		String getDate() {
-			return selectDay + "/" + selectMonth + "/" + selectYear;
+			return selectMonth + "/" + selectDay + "/" + selectYear;
 		}
 	}
 }
