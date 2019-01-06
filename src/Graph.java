@@ -9,6 +9,9 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * This class show a graph of stock data.
+ */
 class Graph extends JFrame {
 	/**
 	 * Window's width.
@@ -18,15 +21,27 @@ class Graph extends JFrame {
 	 * Window's height.
 	 */
 	private final static int WINDOW_HEIGHT = 720;
+	/**
+	 * Graph's padding.
+	 */
 	private final static int GRAPH_PADDING = 50;
 
-	Graph(String ticker, String startDate, String endDate) throws HeadlessException {
+	/**
+	 * Constructor of Graph class.
+	 *
+	 * @param ticker    Ticker symbol.
+	 * @param startDate Start date.
+	 * @param endDate   End date.
+	 */
+	Graph(String ticker, String startDate, String endDate) {
+		//Set frame look
 		this.setTitle(ticker + " " + startDate + " to " + endDate);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 
+		//Complete url for data file
 		String url = "https://quotes.wsj.com/" + ticker
 				+ "/historical-prices/download?MOD_VIEW=page&num_rows=90&startDate="
 				+ startDate + "&endDate=" + endDate;
@@ -36,11 +51,12 @@ class Graph extends JFrame {
 			URL website = new URL(url);
 			URLConnection connection = website.openConnection();
 			String redirect = connection.getHeaderField("Location");
+			//Check 301 redirect
 			if (redirect != null) {
 				connection = new URL(redirect).openConnection();
 			}
-			InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
 
+			InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
 			FileWriter fileWriter = new FileWriter("./temp.csv");
 
 			int c;
@@ -64,7 +80,8 @@ class Graph extends JFrame {
 		try {
 			FileReader fileReader = new FileReader("./temp.csv");
 			Scanner scanner = new Scanner(fileReader);
-			if (scanner.hasNextLine()) scanner.nextLine(); //Skip first line
+			//Skip the first line
+			if (scanner.hasNextLine()) scanner.nextLine();
 
 			data = new ArrayList<>();
 			openData = new ArrayList<>();
@@ -74,6 +91,7 @@ class Graph extends JFrame {
 			volumeData = new ArrayList<>();
 			while (scanner.hasNextLine()) {
 				String newLine = scanner.nextLine();
+				//Split one line by comma
 				String[] singleData = newLine.split(",");
 				data.add(singleData);
 				openData.add(new String[]{singleData[0], singleData[1]});
@@ -103,76 +121,106 @@ class Graph extends JFrame {
 			return;
 		}
 
+		//First column is date, so set special max and min value of first column
+		//for not affecting max and min value of all data (except volume)
 		double[] maxValue = new double[5];
 		maxValue[0] = Double.MIN_VALUE;
 
 		double[] minValue = new double[5];
 		minValue[0] = Double.MAX_VALUE;
 
+		//Find every column's max and min
 		for (int i = 1; i < 5; i++) {
 			maxValue[i] = Double.parseDouble(data.get(0)[i]);
+			//Find one column's max
 			for (String[] d : data) {
 				double temp = Double.parseDouble(d[i]);
 				maxValue[i] = maxValue[i] > temp ? maxValue[i] : temp;
 			}
 
 			minValue[i] = Double.parseDouble(data.get(0)[i]);
+			//Find one column's min
 			for (String[] d : data) {
 				double temp = Double.parseDouble(d[i]);
 				minValue[i] = minValue[i] < temp ? minValue[i] : temp;
 			}
 		}
 
+		//Find max of all value (except volume)
 		double realMax = maxValue[0];
 		for (double d : maxValue) {
 			realMax = realMax > d ? realMax : d;
 		}
 
+		//Find min of all value (except volume)
 		double realMin = minValue[0];
 		for (double d : minValue) {
 			realMin = realMin < d ? realMin : d;
 		}
 
+		//For better looks of graph, calculate a bigger interval
 		double top = realMax + (realMax - realMin) * 0.05;
 
 		double tmp = realMin - (realMax - realMin) * 0.05;
 		double bottom = tmp > 0.0 ? tmp : 0.0;
 
+		//Find max volume
 		double maxVolume = Double.parseDouble(data.get(0)[5]);
 		for (String[] d : data) {
 			double temp = Double.parseDouble(d[5]);
 			maxVolume = maxVolume > temp ? maxVolume : temp;
 		}
 
+		//Find min volume
 		double minVolume = Double.parseDouble(data.get(0)[5]);
 		for (String[] d : data) {
 			double temp = Double.parseDouble(d[5]);
 			minVolume = minVolume < temp ? minVolume : temp;
 		}
 
+		//For better looks of graph, calculate a bigger interval
 		double topVolume = maxVolume + (maxVolume - minVolume) * 0.05;
 
 		double v = minVolume - (maxVolume - minVolume) * 0.05;
 		double bottomVolume = v > 0.0 ? v : 0.0;
 
+		//Create several graphs and add into a tabbed pane
 		JTabbedPane tabbedPane = new JTabbedPane();
-
-		tabbedPane.add("Close Value", new GraphPanel(closeData, top, bottom));
+		tabbedPane.add("Close", new GraphPanel(closeData, top, bottom));
 		tabbedPane.add("Open", new GraphPanel(openData, top, bottom));
 		tabbedPane.add("High", new GraphPanel(highData, top, bottom));
 		tabbedPane.add("Low", new GraphPanel(lowData, top, bottom));
 		tabbedPane.add("Volume", new GraphPanel(volumeData, topVolume, bottomVolume));
-
 		this.add(tabbedPane);
+
 		this.pack();
 		this.setVisible(true);
 	}
 
+	/**
+	 * This class draw a graph for specified data.
+	 */
 	private class GraphPanel extends JPanel {
+		/**
+		 * Stored data.
+		 */
 		private ArrayList<String[]> data;
+		/**
+		 * The border of graph.
+		 */
 		private double top;
+		/**
+		 * The border of graph.
+		 */
 		private double bottom;
 
+		/**
+		 * Constructor of GraphPanel class.
+		 *
+		 * @param data   Stored data.
+		 * @param top    Top border of graph.
+		 * @param bottom Bottom border of graph.
+		 */
 		GraphPanel(ArrayList<String[]> data, double top, double bottom) {
 			this.data = data;
 			this.top = top;
@@ -187,15 +235,16 @@ class Graph extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 
+			//Anti-aliasing, for better look
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			// draw white background
+			//Draw white background
 			g2.setColor(Color.WHITE);
 			g2.fillRect(GRAPH_PADDING, GRAPH_PADDING, WINDOW_WIDTH - GRAPH_PADDING * 2, WINDOW_HEIGHT - GRAPH_PADDING * 2);
 
 			final int Y_NUM = 10;
-			//Create hatch marks and grid lines for Y axis.
+			//Create horizontal lines and labels of Y axis
 			for (int i = 0; i < Y_NUM + 1; i++) {
 				int x0 = GRAPH_PADDING;
 				int y0 = (int) ((WINDOW_HEIGHT - GRAPH_PADDING * 2) * ((Y_NUM - i) * 1.0) / Y_NUM + GRAPH_PADDING);
@@ -213,11 +262,10 @@ class Graph extends JFrame {
 			}
 
 			//X axis
-			g2.setColor(Color.BLACK);
 			g2.drawLine(GRAPH_PADDING, WINDOW_HEIGHT - GRAPH_PADDING, WINDOW_WIDTH - GRAPH_PADDING, WINDOW_HEIGHT - GRAPH_PADDING);
 
 			final int X_NUM = data.size() - 1;
-			//Create hatch marks and grid lines for X axis.
+			//Create vertical lines and labels of Y axis
 			for (int i = 0; i < X_NUM + 1; i++) {
 				int x0 = (int) ((WINDOW_WIDTH - GRAPH_PADDING * 2) * (i * 1.0) / X_NUM + GRAPH_PADDING);
 				int y0 = GRAPH_PADDING;
@@ -235,7 +283,6 @@ class Graph extends JFrame {
 			}
 
 			//Y axis
-			g2.setColor(Color.BLACK);
 			g2.drawLine(GRAPH_PADDING, GRAPH_PADDING, GRAPH_PADDING, WINDOW_HEIGHT - GRAPH_PADDING);
 
 			//Create points associated to data
@@ -246,6 +293,7 @@ class Graph extends JFrame {
 				pointData.add(new int[]{x, y});
 			}
 
+			//Draw lines to connect points
 			for (int i = 0; i < pointData.size() - 1; i++) {
 				int x1 = pointData.get(i)[0];
 				int y1 = pointData.get(i)[1];
@@ -254,6 +302,7 @@ class Graph extends JFrame {
 				g2.drawLine(x1, y1, x2, y2);
 			}
 
+			//Show every point's value near to the point
 			for (int i = 0; i < pointData.size(); i++) {
 				int x = pointData.get(i)[0];
 				int y = pointData.get(i)[1];
