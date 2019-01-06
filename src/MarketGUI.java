@@ -94,10 +94,10 @@ public class MarketGUI extends JFrame {
 		DateDropDown(String prompt) {
 			yearList = new JComboBox<>();
 			yearList.setFont(MAIN_FONT);
-			for (int i = 2008; i <= 2018; i++)
+			for (int i = 2008; i <= 2019; i++)
 				yearList.addItem(i);
 			yearList.setSelectedIndex(yearList.getItemCount() - 1);
-			selectYear = 2018;
+			selectYear = 2019;
 
 			monthList = new JComboBox<>();
 			monthList.setFont(MAIN_FONT);
