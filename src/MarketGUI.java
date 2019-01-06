@@ -128,7 +128,7 @@ public class MarketGUI extends JFrame {
 		 * @param prompt Prompt of this date selector.
 		 */
 		DateDropDown(String prompt) {
-			//Create year list.
+			//Create year list
 			yearList = new JComboBox<>();
 			yearList.setFont(MAIN_FONT);
 			for (int i = 2008; i <= 2019; i++)
@@ -136,7 +136,7 @@ public class MarketGUI extends JFrame {
 			yearList.setSelectedIndex(yearList.getItemCount() - 1);
 			selectYear = 2019;
 
-			//Create month list.
+			//Create month list
 			monthList = new JComboBox<>();
 			monthList.setFont(MAIN_FONT);
 			for (int i = 1; i <= 12; i++)
@@ -144,17 +144,17 @@ public class MarketGUI extends JFrame {
 			monthList.setSelectedIndex(0);
 			selectMonth = 1;
 
-			//Create day list.
+			//Create day list
 			dayList = new JComboBox<>();
 			dayList.setFont(MAIN_FONT);
 			setDayList();
 			selectDay = 1;
 
-			//Add action listener for year and month lists.
+			//Add action listener for year and month lists
 			yearList.addActionListener(this);
 			monthList.addActionListener(this);
 
-			//Set looks for components.
+			//Set looks for components
 			JLabel promptLabel = new JLabel(prompt + ": ");
 			promptLabel.setFont(MAIN_FONT);
 			JLabel yearLabel = new JLabel("Year");
