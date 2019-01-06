@@ -4,6 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.YearMonth;
 
+/**
+ * This class let user choose ticker and date.
+ */
 public class MarketGUI extends JFrame {
 	/**
 	 * The main font of UI.
@@ -17,18 +20,28 @@ public class MarketGUI extends JFrame {
 	 * Window's height.
 	 */
 	private final static int WINDOW_HEIGHT = 320;
-
+	/**
+	 * Available ticker symbols.
+	 */
 	private final static String[] tickerSymbols = {"A", "AAPL", "BRK.A", "C", "GOOG", "HOG",
 			"HPQ", "INTC", "KO", "LUV", "MMM", "MSFT", "T", "TGT", "TXN", "WMT"};
-
+	/**
+	 * Corresponded ticker names.
+	 */
 	private final static String[] tickerNames = {"Agilent Technologies", "Apple Inc.", "Berkshire Hathaway",
 			"Citigroup", "Alphabet Inc.", "Harley-Davidson Inc.", "Hewlett-Packard", "Intel",
 			"The Coca-Cola Company", "Southwest Airlines", "3M", "Microsoft", "AT&T",
 			"Target Corporation", "Texas Instruments", "Walmart"};
-
+	/**
+	 * Record selected ticker symbol.
+	 */
 	private String selectTicker;
 
-	private MarketGUI() throws HeadlessException {
+	/**
+	 * Constructor of MarketGUI class.
+	 */
+	private MarketGUI() {
+		//Set frame look
 		this.setTitle("Stock Market");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -71,19 +84,51 @@ public class MarketGUI extends JFrame {
 		this.setVisible(true);
 	}
 
+	/**
+	 * Program starts here.
+	 *
+	 * @param args Command line arguments.
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(MarketGUI::new);
 	}
 
+	/**
+	 * This class create a date selector.
+	 */
 	private class DateDropDown extends JPanel implements ActionListener {
+		/**
+		 * Selected year.
+		 */
 		private int selectYear;
+		/**
+		 * Selected month.
+		 */
 		private int selectMonth;
+		/**
+		 * Selected day.
+		 */
 		private int selectDay;
+		/**
+		 * Year list, contains available years.
+		 */
 		private JComboBox<Integer> yearList;
+		/**
+		 * Month list, contains available months.
+		 */
 		private JComboBox<Integer> monthList;
+		/**
+		 * Day list, contains available days.
+		 */
 		private JComboBox<Integer> dayList;
 
+		/**
+		 * Constructor of DateDropDown class.
+		 *
+		 * @param prompt Prompt of this date selector.
+		 */
 		DateDropDown(String prompt) {
+			//Create year list.
 			yearList = new JComboBox<>();
 			yearList.setFont(MAIN_FONT);
 			for (int i = 2008; i <= 2019; i++)
@@ -91,6 +136,7 @@ public class MarketGUI extends JFrame {
 			yearList.setSelectedIndex(yearList.getItemCount() - 1);
 			selectYear = 2019;
 
+			//Create month list.
 			monthList = new JComboBox<>();
 			monthList.setFont(MAIN_FONT);
 			for (int i = 1; i <= 12; i++)
@@ -98,15 +144,17 @@ public class MarketGUI extends JFrame {
 			monthList.setSelectedIndex(0);
 			selectMonth = 1;
 
+			//Create day list.
 			dayList = new JComboBox<>();
 			dayList.setFont(MAIN_FONT);
 			setDayList();
 			selectDay = 1;
 
+			//Add action listener for year and month lists.
 			yearList.addActionListener(this);
 			monthList.addActionListener(this);
-//			dayList.addActionListener(this);
 
+			//Set looks for components.
 			JLabel promptLabel = new JLabel(prompt + ": ");
 			promptLabel.setFont(MAIN_FONT);
 			JLabel yearLabel = new JLabel("Year");
@@ -138,20 +186,32 @@ public class MarketGUI extends JFrame {
 				selectDay();
 		}
 
+		/**
+		 * Record selected year.
+		 */
 		private void selectYear() {
 			selectYear = (int) yearList.getSelectedItem();
 			setDayList();
 		}
 
+		/**
+		 * Record selected month.
+		 */
 		private void selectMonth() {
 			selectMonth = (int) monthList.getSelectedItem();
 			setDayList();
 		}
 
+		/**
+		 * Record selected day.
+		 */
 		private void selectDay() {
 			selectDay = (int) dayList.getSelectedItem();
 		}
 
+		/**
+		 * Calculate the days of specified month and recreate day list.
+		 */
 		private void setDayList() {
 			YearMonth yearMonth = YearMonth.of(selectYear, selectMonth);
 			dayList.removeActionListener(this);
@@ -163,6 +223,11 @@ public class MarketGUI extends JFrame {
 			dayList.addActionListener(this);
 		}
 
+		/**
+		 * Get the selected date.
+		 *
+		 * @return Selected date, e.g. "12/31/2018";
+		 */
 		String getDate() {
 			return selectMonth + "/" + selectDay + "/" + selectYear;
 		}
