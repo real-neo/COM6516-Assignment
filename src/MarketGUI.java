@@ -136,9 +136,6 @@ public class MarketGUI extends JFrame {
 				selectMonth();
 			else if (e.getSource().equals(dayList))
 				selectDay();
-			System.out.print("Year: " + selectYear);
-			System.out.print(", Month: " + selectMonth);
-			System.out.println(", Day: " + selectDay);
 		}
 
 		private void selectYear() {
