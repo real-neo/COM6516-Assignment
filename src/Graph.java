@@ -27,13 +27,6 @@ class Graph extends JFrame {
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 
-		JLabel promptLabel = new JLabel("Loading...", JLabel.CENTER);
-		promptLabel.setFont(MarketGUI.MAIN_FONT);
-
-		this.add(promptLabel, BorderLayout.CENTER);
-
-		this.setVisible(true);
-
 		String url = "https://quotes.wsj.com/" + ticker
 				+ "/historical-prices/download?MOD_VIEW=page&num_rows=90&startDate="
 				+ startDate + "&endDate=" + endDate;
@@ -96,15 +89,19 @@ class Graph extends JFrame {
 		}
 
 		//Check data before showing
+		JLabel promptLabel = new JLabel("", JLabel.CENTER);
+		promptLabel.setFont(MarketGUI.MAIN_FONT);
 		if (data == null) {
 			promptLabel.setText("Load file failed");
+			this.add(promptLabel, BorderLayout.CENTER);
+			this.setVisible(true);
 			return;
 		} else if (data.size() == 0) {
 			promptLabel.setText("No data available");
+			this.add(promptLabel, BorderLayout.CENTER);
+			this.setVisible(true);
 			return;
 		}
-
-		this.remove(promptLabel);
 
 		double[] maxValue = new double[5];
 		maxValue[0] = Double.MIN_VALUE;
@@ -168,6 +165,7 @@ class Graph extends JFrame {
 
 		this.add(tabbedPane);
 		this.pack();
+		this.setVisible(true);
 	}
 
 	private class GraphPanel extends JPanel {
