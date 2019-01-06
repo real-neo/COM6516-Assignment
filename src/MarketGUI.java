@@ -8,7 +8,7 @@ public class MarketGUI extends JFrame {
 	/**
 	 * The main font of UI.
 	 */
-	private final static Font MAIN_FONT = new Font("Arial", Font.PLAIN, 24);
+	final static Font MAIN_FONT = new Font("Arial", Font.PLAIN, 24);
 	/**
 	 * Window's width.
 	 */
@@ -17,9 +17,6 @@ public class MarketGUI extends JFrame {
 	 * Window's height.
 	 */
 	private final static int WINDOW_HEIGHT = 320;
-
-	private final static String[] linkParts = new String[]{"http://quotes.wsj.com/",
-			"/historical-prices/download?MOD_VIEW=page&num_rows=90&startDate=", "&endDate="};
 
 	private final static String[] tickerSymbols = {"A", "AAPL", "BRK.A", "C", "GOOG", "HOG",
 			"HPQ", "INTC", "KO", "LUV", "MMM", "MSFT", "T", "TGT", "TXN", "WMT"};
@@ -63,12 +60,7 @@ public class MarketGUI extends JFrame {
 		//OK button
 		JButton button = new JButton("OK");
 		button.setFont(MAIN_FONT);
-		button.addActionListener(e -> {
-			System.out.println(startDate.getDate());
-			System.out.println(endDate.getDate());
-			String link = linkParts[0] + selectTicker + linkParts[1] + startDate.getDate() + linkParts[2] + endDate.getDate();
-			System.out.println(link);
-		});
+		button.addActionListener(e -> new Graph(selectTicker, startDate.getDate(), endDate.getDate()));
 		JPanel southPanel = new JPanel();
 		southPanel.add(button);
 
