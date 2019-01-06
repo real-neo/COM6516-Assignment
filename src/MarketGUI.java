@@ -107,7 +107,7 @@ public class MarketGUI extends JFrame {
 			monthList.addActionListener(this);
 //			dayList.addActionListener(this);
 
-			JLabel promptLabel = new JLabel(prompt);
+			JLabel promptLabel = new JLabel(prompt + ": ");
 			promptLabel.setFont(MAIN_FONT);
 			JLabel yearLabel = new JLabel("Year");
 			yearLabel.setFont(MAIN_FONT);
