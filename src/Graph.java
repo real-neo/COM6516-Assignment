@@ -308,10 +308,10 @@ class Graph extends JFrame {
 				int x = pointData.get(i)[0];
 				int y = pointData.get(i)[1];
 
-				String closeValue = data.get(i)[1];
+				String value = data.get(i)[1];
 				FontMetrics metrics = g2.getFontMetrics();
-				int labelWidth = metrics.stringWidth(closeValue);
-				g2.drawString(closeValue, x - labelWidth / 2, y - metrics.getHeight());
+				int labelWidth = metrics.stringWidth(value);
+				g2.drawString(value, x - labelWidth / 2, y - metrics.getHeight());
 			}
 		}
 	}
