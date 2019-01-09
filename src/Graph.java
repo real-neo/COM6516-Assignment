@@ -277,10 +277,13 @@ class Graph extends JFrame {
 
 				g2.setColor(Color.BLACK);
 				g2.drawLine(x0, y1 - 5, x1, y1);
-				String xLabel = data.get(X_NUM - i)[0];
-				FontMetrics metrics = g2.getFontMetrics();
-				int labelWidth = metrics.stringWidth(xLabel);
-				g2.drawString(xLabel, x1 - labelWidth / 2, y1 + metrics.getHeight());
+				//For better X axis labels display
+				if (((X_NUM + 1) <= 15) || ((X_NUM + 1) <= 45 && i % 3 == 0) || ((X_NUM + 1) > 45 && i % 6 == 0)) {
+					String xLabel = data.get(X_NUM - i)[0];
+					FontMetrics metrics = g2.getFontMetrics();
+					int labelWidth = metrics.stringWidth(xLabel);
+					g2.drawString(xLabel, x1 - labelWidth / 2, y1 + metrics.getHeight());
+				}
 			}
 
 			//Y axis
