@@ -93,6 +93,7 @@ class Graph extends JFrame {
 				String newLine = scanner.nextLine();
 				//Split one line by comma
 				String[] singleData = newLine.split(",");
+				if (singleData.length < 6) continue; //When missing values
 				data.add(singleData);
 				openData.add(new String[]{singleData[0], singleData[1]});
 				highData.add(new String[]{singleData[0], singleData[2]});
